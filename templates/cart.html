@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Корзина - Monvoir</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <a href="{{ url_for('index') }}" class="back-link">← Назад к каталогу</a>
+            <h1 class="logo">
+                <div class="logo-icon">🛒</div>
+                Корзина
+            </h1>
+            <a href="{{ url_for('favorites') }}" class="favorites-link">
+                <span class="heart-icon">♥</span>
+                <span class="favorites-count">0</span>
+            </a>
+        </header>
+
+        <!-- Cart Content -->
+        <div class="cart-container">
+            <div id="cart-items" class="cart-items">
+                <!-- Cart items will be loaded here by JavaScript -->
+            </div>
+            
+            <div id="empty-cart" class="empty-state" style="display: none;">
+                <div class="empty-icon">🛒</div>
+                <h3>Корзина пуста</h3>
+                <p>Добавьте товары из <a href="{{ url_for('index') }}">каталога</a></p>
+            </div>
+            
+            <div id="cart-summary" class="cart-summary" style="display: none;">
+                <div class="summary-row">
+                    <span>Товаров:</span>
+                    <span id="total-items">0</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Итого:</span>
+                    <span id="total-price">0 ₽</span>
+                </div>
+                <button class="btn btn-primary btn-large" onclick="checkoutCart()">
+                    Оформить заказ
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div id="checkoutModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeCheckoutModal()">&times;</span>
+            <h3>Оформление заказа</h3>
+            <p>Ваш заказ:</p>
+            <div id="checkout-items" class="checkout-items"></div>
+            <div class="checkout-total">
+                <strong>Общая сумма: <span id="checkout-total">0 ₽</span></strong>
+            </div>
+            <div class="contact-info">
+                <h4>Для оформления заказа свяжитесь с нами:</h4>
+                <!-- <p>📞 Телефон: +7 (xxx) xxx-xx-xx</p> -->
+                <p>💬 Telegram: @monvoir_uz</p>
+                <p>✉️ Instagram: @monvoir_store</p>
+            </div>
+            <div class="checkout-actions">
+                <button class="btn btn-primary" onclick="confirmOrder()">
+                    Подтвердить заказ
+                </button>
+                <button class="btn btn-secondary" onclick="clearCart()">
+                    Очистить корзину
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/cart.js') }}"></script>
+</body>
+</html>

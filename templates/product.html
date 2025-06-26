@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ product.name }} - Monvoir</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <a href="{{ url_for('index') }}" class="back-link">← Назад к каталогу</a>
+            <h1 class="logo">
+                <div class="logo-icon">M</div>
+                Monvoir
+            </h1>
+            <div class="header-actions">
+                <a href="{{ url_for('favorites') }}" class="favorites-link">
+                    <span class="heart-icon">♥</span>
+                    <span class="favorites-count">0</span>
+                </a>
+                <a href="{{ url_for('cart') }}" class="cart-link">
+                    <span class="cart-icon">🛒</span>
+                    <span class="cart-count">0</span>
+                </a>
+            </div>
+        </header>
+
+        <!-- Product Detail -->
+        <div class="product-detail">
+            <div class="product-detail-image-container">
+                <div class="product-detail-gallery">
+                    {% set all_images = product.get_all_images() %}
+                    {% for image_url in all_images %}
+                    <div class="detail-gallery-slide {% if loop.first %}active{% endif %}">
+                        <img src="{{ image_url }}" alt="{{ product.name }}">
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                {% if all_images|length > 1 %}
+                <div class="detail-gallery-controls">
+                    <button class="gallery-prev" onclick="changeDetailImage(this, -1)" title="Предыдущее фото">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="15,18 9,12 15,6"></polyline>
+                        </svg>
+                    </button>
+                    <button class="gallery-next" onclick="changeDetailImage(this, 1)" title="Следующее фото">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9,18 15,12 9,6"></polyline>
+                        </svg>
+                    </button>
+                </div>
+                
+                <div class="detail-gallery-thumbnails">
+                    {% for image_url in all_images %}
+                    <div class="thumbnail {% if loop.first %}active{% endif %}" onclick="goToDetailImage(this, {{ loop.index0 }})">
+                        <img src="{{ image_url }}" alt="{{ product.name }}">
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                
+                <button class="favorite-btn product-favorite" data-product-id="{{ product.id }}" onclick="toggleFavorite({
+                    id: {{ product.id }},
+                    name: '{{ product.name|replace("'", "\\'") }}',
+                    price: {{ product.price }},
+                    category: '{{ product.category }}',
+                    image_url: '{{ product.image_url }}',
+                    description: '{{ product.description|replace("'", "\\'") }}'
+                })">
+                    <span class="heart-icon">♥</span>
+                </button>
+            </div>
+            
+            <div class="product-detail-info">
+                <div class="product-category-badge">{{ product.category }}</div>
+                <h1 class="product-detail-name">{{ product.name }}</h1>
+                <div class="product-detail-price">{{ product.formatted_price() }}</div>
+                
+                <div class="product-description">
+                    <h3>Описание</h3>
+                    <p>{{ product.description }}</p>
+                </div>
+                
+                <div class="product-actions">
+                    <button class="btn btn-primary btn-large" onclick="addToCart({
+                        id: {{ product.id }},
+                        name: '{{ product.name|replace("'", "\\'") }}',
+                        price: {{ product.price }},
+                        category: '{{ product.category }}',
+                        image_url: '{{ product.image_url }}'
+                    }, this)">
+                        Добавить в корзину
+                    </button>
+                    <button class="btn btn-secondary btn-large" onclick="showOrderInfo()">
+                        Быстрый заказ
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Modal -->
+    <div id="orderModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeOrderModal()">&times;</span>
+            <h3>Оформление заказа</h3>
+            <p>Для оформления заказа свяжитесь с нами:</p>
+            <div class="contact-info">
+                <!-- <p>📞 Телефон: +7 (xxx) xxx-xx-xx</p> -->
+                <p>💬 Telegram: @monvoir_uz</p>
+                <p>✉️ Instagram: @monvoir_store</p>
+            </div>
+            <p class="order-item">
+                <strong>Товар:</strong> {{ product.name }}<br>
+                <strong>Цена:</strong> {{ product.formatted_price() }}
+            </p>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/cart.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/favorites.js') }}"></script>
+</body>
+</html>

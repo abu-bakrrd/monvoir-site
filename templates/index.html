@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monvoir - Каталог</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1 class="logo">
+                                <img class="logo-icon" src="{{ url_for('static', filename='tglogoai.png') }}" alt="">
+                Monvoir
+            </h1>
+            <div class="header-actions">
+                <a href="{{ url_for('favorites') }}" class="favorites-link">
+                    <span class="heart-icon">♥</span>
+                    <span class="favorites-count">0</span>
+                </a>
+                <a href="{{ url_for('cart') }}" class="cart-link">
+                    <span class="cart-icon">🛒</span>
+                    <span class="cart-count">0</span>
+                </a>
+            </div>
+        </header>
+
+        <!-- Search and Filters -->
+        <div class="search-filters-section">
+            <!-- Search Bar -->
+            <div class="search-container">
+                <div class="search-group">
+                    <input type="text" id="search-input" placeholder="Поиск товаров..." 
+                           value="{{ request.args.get('search', '') }}" 
+                           oninput="handleSearchInput()"
+                           autocomplete="off" 
+                           spellcheck="false">
+                    <button type="button" class="search-btn" onclick="performSearch()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="21 21l-4.35-4.35"></path>
+                        </svg>
+                    </button>
+                    {% if request.args.get('search') %}
+                    <button type="button" class="clear-search-btn" onclick="clearSearch()" title="Очистить поиск">
+                        ✕
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Filters Row -->
+            <div class="filters-section">
+                <div class="filter-group">
+                    <label for="category-filter">Категория:</label>
+                    <select id="category-filter" onchange="filterProducts()">
+                        <option value="">Все категории</option>
+                        {% for category in categories %}
+                        <option value="{{ category }}" {% if request.args.get('category') == category %}selected{% endif %}>
+                            {{ category }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="color-filter">Цвет:</label>
+                    <select id="color-filter" onchange="filterProducts()" class="color-select">
+                        <option value="">Все цвета</option>
+                        <option value="black" data-color="#000000" {% if request.args.get('color') == 'black' %}selected{% endif %}>⚫ Черный</option>
+                        <option value="white" data-color="#FFFFFF" {% if request.args.get('color') == 'white' %}selected{% endif %}>⚪ Белый</option>
+                        <option value="brown" data-color="#8B4513" {% if request.args.get('color') == 'brown' %}selected{% endif %}>🟤 Коричневый</option>
+                        <option value="beige" data-color="#F5F5DC" {% if request.args.get('color') == 'beige' %}selected{% endif %}>🟡 Бежевый</option>
+                        <option value="gray" data-color="#808080" {% if request.args.get('color') == 'gray' %}selected{% endif %}>⚫ Серый</option>
+                        <option value="blue" data-color="#0066CC" {% if request.args.get('color') == 'blue' %}selected{% endif %}>🔵 Синий</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label for="sort-filter">Сортировка:</label>
+                    <select id="sort-filter" onchange="filterProducts()">
+                        <option value="name" {% if current_sort == 'name' %}selected{% endif %}>По алфавиту</option>
+                        <option value="price_asc" {% if current_sort == 'price_asc' %}selected{% endif %}>Цена: по возрастанию (UZS)</option>
+                        <option value="price_desc" {% if current_sort == 'price_desc' %}selected{% endif %}>Цена: по убыванию (UZS)</option>
+                        <option value="newest" {% if current_sort == 'newest' %}selected{% endif %}>Новинки</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Price Range Filter -->
+            <div class="price-range-section">
+                <div class="price-range-group">
+                    <label>Диапазон цен:</label>
+                    <div class="price-inputs">
+                        <input type="number" id="min-price" placeholder="От" 
+                               value="{{ request.args.get('min_price', '') }}" 
+                               onchange="filterProducts()">
+                        <span class="price-separator">—</span>
+                        <input type="number" id="max-price" placeholder="До" 
+                               value="{{ request.args.get('max_price', '') }}" 
+                               onchange="filterProducts()">
+                        <span class="currency">₽</span>
+                    </div>
+                </div>
+                
+                {% if request.args.get('search') or request.args.get('category') or request.args.get('color') or request.args.get('min_price') or request.args.get('max_price') %}
+                <button type="button" class="clear-filters-btn" onclick="clearAllFilters()">
+                    Сбросить фильтры
+                </button>
+                {% endif %}
+            </div>
+
+            <!-- Results Info -->
+            <div class="results-info">
+                <span class="results-count">
+                    {% if products %}
+                        Найдено: {{ products|length }} товар{{ 'ов' if products|length > 4 else ('а' if products|length > 1 else '') }}
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash-message flash-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Products Grid -->
+        <div class="products-grid">
+            {% if products %}
+                {% for product in products %}
+                <div class="product-card">
+                    <div class="product-image-container">
+                        <div class="product-image-gallery">
+                            {% set all_images = product.get_all_images() %}
+                            {% for image_url in all_images %}
+                            <div class="gallery-slide {% if loop.first %}active{% endif %}">
+                                <img src="{{ image_url }}" alt="{{ product.name }}" loading="lazy">
+                            </div>
+                            {% endfor %}
+                        </div>
+                        
+                        {% if all_images|length > 1 %}
+                        <div class="gallery-controls">
+                            <button class="gallery-prev" onclick="changeImage(this, -1)" title="Предыдущее фото">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="15,18 9,12 15,6"></polyline>
+                                </svg>
+                            </button>
+                            <button class="gallery-next" onclick="changeImage(this, 1)" title="Следующее фото">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="9,18 15,12 9,6"></polyline>
+                                </svg>
+                            </button>
+                        </div>
+                        
+                        <div class="gallery-indicators">
+                            {% for image_url in all_images %}
+                            <span class="indicator {% if loop.first %}active{% endif %}" onclick="goToImage(this, {{ loop.index0 }})"></span>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        
+                        <button class="favorite-btn" data-product-id="{{ product.id }}" onclick="toggleFavorite({
+                            id: {{ product.id }},
+                            name: '{{ product.name|replace("'", "\\'") }}',
+                            price: {{ product.price }},
+                            category: '{{ product.category }}',
+                            image_url: '{{ product.image_url }}',
+                            description: '{{ product.description|replace("'", "\\'") }}'
+                        })">
+                            <span class="heart-icon">♥</span>
+                        </button>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">{{ product.name }}</h3>
+                        <p class="product-category">{{ product.category }}</p>
+                        <p class="product-price">{{ product.formatted_price() }}</p>
+                        <div class="product-actions">
+                            <a href="{{ url_for('product_detail', product_id=product.id) }}" class="btn btn-primary">
+                                Подробнее
+                            </a>
+                            <button class="btn btn-secondary" onclick="addToCart({
+                                id: {{ product.id }},
+                                name: '{{ product.name|replace("'", "\\'") }}',
+                                price: {{ product.price }},
+                                category: '{{ product.category }}',
+                                image_url: '{{ product.image_url }}'
+                            }, this)">
+                                В корзину
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-icon">🛍️</div>
+                    <h3>Пока здесь пусто</h3>
+                    <p>Для добавления товаров используйте скрипт add_product.py</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/cart.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/favorites.js') }}"></script>
+</body>
+</html>
