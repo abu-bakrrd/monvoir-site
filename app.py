@@ -27,7 +27,7 @@ import os
 render_db = os.environ.get("RENDER_DATABASE_URL")
 local_fallback = "sqlite:///local.db"
 
-app.config["SQLALCHEMY_DATABASE_URI"] = render_db or local_fallback
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("RENDER_DATABASE_URL")
 
 app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
     "pool_recycle": 300,
