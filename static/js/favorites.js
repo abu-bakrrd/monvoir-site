@@ -86,38 +86,39 @@ class Favorites {
         emptyFavorites.style.display = 'none';
         favoritesContainer.style.display = 'grid';
 
-        favoritesContainer.innerHTML = this.items.map(item => `
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="${item.image_url}" alt="${item.name}" loading="lazy">
-                    <button class="favorite-btn active" onclick="toggleFavorite({
-                        id: ${item.id},
-                        name: '${item.name.replace(/'/g, "\\'")}',
-                        price: ${item.price},
-                        category: '${item.category}',
-                        image_url: '${item.image_url}',
-                        description: '${item.description.replace(/'/g, "\\'")}'
-                    })">
-                        <span class="heart-icon">♥</span>
-                    </button>
-                </div>
-                <div class="product-info">
-                    <h3 class="product-name">${item.name}</h3>
-                    <p class="product-category">${item.category}</p>
-                    <p class="product-price">${this.formatPrice(item.price)}</p>
-                    <div class="product-actions">
-                        <a href="/product/${item.id}" class="btn btn-primary">Подробнее</a>
-                        <button class="btn btn-secondary" onclick="addToCart({
-                            id: ${item.id},
-                            name: '${item.name.replace(/'/g, "\\'")}',
-                            price: ${item.price},
-                            category: '${item.category}',
-                            image_url: '${item.image_url}'
-                        })">В корзину</button>
-                    </div>
-                </div>
+favoritesContainer.innerHTML = this.items.map(item => `
+    <div class="product-card">
+        <div class="product-image">
+            <img src="${item.image_url}" alt="${item.name}" loading="lazy">
+            <button class="favorite-btn active" onclick='toggleFavorite(${JSON.stringify({
+                id: item.id,
+                name: item.name,
+                price: item.price,
+                category: item.category,
+                image_url: item.image_url,
+                description: item.description
+            })})'>
+                <span class="heart-icon">♥</span>
+            </button>
+        </div>
+        <div class="product-info">
+            <h3 class="product-name">${item.name}</h3>
+            <p class="product-category">${item.category}</p>
+            <p class="product-price">${this.formatPrice(item.price)}</p>
+            <div class="product-actions">
+                <a href="/product/${item.id}" class="btn btn-primary">Подробнее</a>
+                <button class="btn btn-secondary" onclick='addToCart(${JSON.stringify({
+                    id: item.id,
+                    name: item.name,
+                    price: item.price,
+                    category: item.category,
+                    image_url: item.image_url
+                })})'>В корзину</button>
             </div>
-        `).join('');
+        </div>
+    </div>
+`).join('');
+
     }
 
     updateHeartIcons() {
