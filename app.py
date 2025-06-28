@@ -7,6 +7,8 @@ from werkzeug.utils import secure_filename
 from werkzeug.middleware.proxy_fix import ProxyFix
 import sqlite3
 from datetime import datetime
+from dotenv import load_dotenv
+load_dotenv()
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
@@ -87,47 +89,6 @@ def init_db():
                     image_url="https://via.placeholder.com/400x500/2C2C2C/FFFFFF?text=Черное+пальто",
                     image_gallery='["https://via.placeholder.com/400x500/1A1A1A/FFFFFF?text=Пальто+2", "https://via.placeholder.com/400x500/333333/FFFFFF?text=Пальто+3"]',
                     color="black"
-                ),
-                Product(
-                    name="Коричневые кожаные ботинки",
-                    price=1249000.0,
-                    category="Обувь",
-                    description="Премиальные коричневые кожаные ботинки ручной работы. Натуральная кожа, удобная подошва, стильный дизайн.",
-                    image_url="https://via.placeholder.com/400x500/8B4513/FFFFFF?text=Коричневые+ботинки",
-                    image_gallery='["https://via.placeholder.com/400x500/A0522D/FFFFFF?text=Ботинки+2", "https://via.placeholder.com/400x500/654321/FFFFFF?text=Ботинки+3"]',
-                    color="brown"
-                ),
-                Product(
-                    name="Серый деловой костюм",
-                    price=28990.0,
-                    category="Костюмы",
-                    description="Классический серый деловой костюм из итальянской ткани. Безупречная посадка, элегантный силуэт.",
-                    image_url="https://via.placeholder.com/400x500/808080/FFFFFF?text=Серый+костюм",
-                    color="gray"
-                ),
-                Product(
-                    name="Белая классическая рубашка",
-                    price=4990.0,
-                    category="Рубашки",
-                    description="Элегантная белая рубашка из премиального хлопка. Идеальна для делового образа и торжественных мероприятий.",
-                    image_url="https://via.placeholder.com/400x500/FFFFFF/2C2C2C?text=Белая+рубашка",
-                    color="white"
-                ),
-                Product(
-                    name="Бежевые брюки чинос",
-                    price=7990.0,
-                    category="Брюки",
-                    description="Стильные бежевые брюки чинос из высококачественного хлопка. Универсальные и комфортные для повседневной носки.",
-                    image_url="https://via.placeholder.com/400x500/F5F5DC/8C735B?text=Бежевые+брюки",
-                    color="beige"
-                ),
-                Product(
-                    name="Синий пиджак",
-                    price=18990.0,
-                    category="Пиджаки",
-                    description="Элегантный синий пиджак из шерстяной ткани. Современный крой, идеален для smart casual образов.",
-                    image_url="https://via.placeholder.com/400x500/1E3A8A/FFFFFF?text=Синий+пиджак",
-                    color="blue"
                 )
             ]
             
