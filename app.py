@@ -130,23 +130,9 @@ def index():
     
     # Filter by color (assuming colors are mentioned in product names or descriptions)
     if color:
-        color_terms = {
-            'black': ['черн', 'black'],
-            'white': ['бел', 'white'],
-            'brown': ['коричнев', 'brown', 'шоколад'],
-            'beige': ['беж', 'beige', 'песочн'],
-            'gray': ['сер', 'gray', 'grey'],
-            'blue': ['син', 'blue', 'голуб']
-        }
-        if color in color_terms:
-            color_filter = db.or_(*[
-                Product.name.ilike(f"%{term}%") 
-                for term in color_terms[color]
-            ] + [
-                Product.description.ilike(f"%{term}%") 
-                for term in color_terms[color]
-            ])
-            query = query.filter(color_filter)
+        # Фильтрация по JSON-массиву colors (строка вида: '["black", "white"]')
+        query = query.filter(Product.colors.ilike(f'%"{color}"%'))
+
     
     # Filter by price range
     if min_price is not None:
