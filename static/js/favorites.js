@@ -89,7 +89,7 @@ class Favorites {
 favoritesContainer.innerHTML = this.items.map(item => `
     <div class="product-card">
         <div class="product-image">
-            <img src="${item.image_url}" alt="${item.name}" loading="lazy">
+            <img class="card-image" src="${item.image_url}" alt="${item.name}" loading="lazy">
             <button class="favorite-btn active" onclick='toggleFavorite(${JSON.stringify({
                 id: item.id,
                 name: item.name,
