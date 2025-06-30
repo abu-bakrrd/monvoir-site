@@ -72,12 +72,24 @@
                     <label for="color-filter">Цвет:</label>
                     <select id="color-filter" onchange="filterProducts()" class="color-select">
                         <option value="">Все цвета</option>
-                        <option value="black" data-color="#000000" {% if request.args.get('color') == 'black' %}selected{% endif %}>⚫ Черный</option>
-                        <option value="white" data-color="#FFFFFF" {% if request.args.get('color') == 'white' %}selected{% endif %}>⚪ Белый</option>
-                        <option value="brown" data-color="#8B4513" {% if request.args.get('color') == 'brown' %}selected{% endif %}>🟤 Коричневый</option>
-                        <option value="beige" data-color="#F5F5DC" {% if request.args.get('color') == 'beige' %}selected{% endif %}>🟡 Бежевый</option>
-                        <option value="gray" data-color="#808080" {% if request.args.get('color') == 'gray' %}selected{% endif %}>⚫ Серый</option>
-                        <option value="blue" data-color="#0066CC" {% if request.args.get('color') == 'blue' %}selected{% endif %}>🔵 Синий</option>
+<option value="black" data-color="#000000" {% if request.args.get('color') == 'black' %}selected{% endif %}>⚫ Черный</option>
+<option value="white" data-color="#FFFFFF" {% if request.args.get('color') == 'white' %}selected{% endif %}>⚪ Белый</option>
+<option value="brown" data-color="#8B4513" {% if request.args.get('color') == 'brown' %}selected{% endif %}>🟤 Коричневый</option>
+<option value="beige" data-color="#F5F5DC" {% if request.args.get('color') == 'beige' %}selected{% endif %}>🟡 Бежевый</option>
+<option value="gray" data-color="#808080" {% if request.args.get('color') == 'gray' %}selected{% endif %}>⚫ Серый</option>
+<option value="blue" data-color="#0066CC" {% if request.args.get('color') == 'blue' %}selected{% endif %}>🔵 Синий</option>
+<option value="red" data-color="#FF0000" {% if request.args.get('color') == 'red' %}selected{% endif %}>🔴 Красный</option>
+<option value="green" data-color="#228B22" {% if request.args.get('color') == 'green' %}selected{% endif %}>🟢 Зеленый</option>
+<option value="yellow" data-color="#FFD700" {% if request.args.get('color') == 'yellow' %}selected{% endif %}>🟡 Желтый</option>
+<option value="orange" data-color="#FFA500" {% if request.args.get('color') == 'orange' %}selected{% endif %}>🟠 Оранжевый</option>
+<option value="purple" data-color="#800080" {% if request.args.get('color') == 'purple' %}selected{% endif %}>🟣 Фиолетовый</option>
+<option value="pink" data-color="#FFC0CB" {% if request.args.get('color') == 'pink' %}selected{% endif %}>🌸 Розовый</option>
+<option value="navy" data-color="#000080" {% if request.args.get('color') == 'navy' %}selected{% endif %}>🔵 Темно-синий</option>
+<option value="turquoise" data-color="#40E0D0" {% if request.args.get('color') == 'turquoise' %}selected{% endif %}>🟦 Бирюзовый</option>
+<option value="gold" data-color="#FFD700" {% if request.args.get('color') == 'gold' %}selected{% endif %}>✨ Золотой</option>
+<option value="silver" data-color="#C0C0C0" {% if request.args.get('color') == 'silver' %}selected{% endif %}>⚪ Серебристый</option>
+<option value="multicolor" data-color="#FF69B4" {% if request.args.get('color') == 'multicolor' %}selected{% endif %}>🌈 Разноцветный</option>
+
                     </select>
                 </div>
                 
