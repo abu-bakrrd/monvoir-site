@@ -31,8 +31,8 @@ class Product(db.Model):
         return f'<Product {self.name}>'
     
     def formatted_price(self):
-        """Return formatted price with currency"""
-        return f"{self.price:,.0f} сум"
+        return f"{self.price:,.0f}".replace(",", " ") + " сум"
+
     
     def get_image_gallery(self):
         """Return list of gallery images"""
