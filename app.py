@@ -130,8 +130,34 @@ def index():
     
     # Filter by color (assuming colors are mentioned in product names or descriptions)
     if color:
-        # Фильтрация по JSON-массиву colors (строка вида: '["black", "white"]')
-        query = query.filter(Product.colors.ilike(f'%"{color}"%'))
+        color_terms = {
+            'black': ['черн', 'black', 'чёрн'],
+            'white': ['бел', 'white'],
+            'brown': ['коричнев', 'brown', 'шоколад'],
+            'beige': ['беж', 'beige', 'песочн', 'телесн'],
+            'gray': ['сер', 'gray', 'grey', 'графит'],
+            'blue': ['син', 'blue', 'голуб', 'лазур', 'небесн'],
+            'red': ['красн', 'red', 'бордов', 'малинов'],
+            'green': ['зел', 'green', 'хаки', 'изумруд'],
+            'yellow': ['желт', 'yellow', 'золот', 'янтар'],
+            'orange': ['оранж', 'orange', 'апельсин'],
+            'purple': ['фиолет', 'purple', 'сиренев', 'лилов'],
+            'pink': ['розов', 'pink', 'пудров'],
+            'navy': ['темно-син', 'navy', 'индиго'],
+            'turquoise': ['бирюз', 'turquoise'],
+            'gold': ['золот', 'gold'],
+            'silver': ['серебр', 'silver'],
+            'multicolor': ['разноцвет', 'multicolor', 'цветн']
+        }
+        if color in color_terms:
+            color_filter = db.or_(*[
+                Product.name.ilike(f"%{term}%") 
+                for term in color_terms[color]
+            ] + [
+                Product.description.ilike(f"%{term}%") 
+                for term in color_terms[color]
+            ])
+            query = query.filter(color_filter)
 
     
     # Filter by price range
