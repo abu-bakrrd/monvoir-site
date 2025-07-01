@@ -233,11 +233,50 @@ function closeCheckoutModal() {
     document.body.style.overflow = 'auto';
 }
 
-function confirmOrder() {
-    alert('Заказ оформлен! Мы свяжемся с вами в ближайшее время.');
-    cart.clear();
-    closeCheckoutModal();
+async function confirmOrder() {
+    const tg = window.Telegram.WebApp;
+    const user = tg?.initDataUnsafe?.user;
+
+    if (!user) {
+        alert("Ошибка: не удалось получить данные пользователя.");
+        return;
+    }
+
+    const orderItems = cart.items.map(item => 
+        `📦 ${item.name} — ${item.quantity} шт. × ${item.price} сум`
+    ).join('\n');
+
+    const total = cart.getTotalPrice();
+
+    const message = `
+🛍 Новый заказ
+👤 Пользователь: ${user.first_name} (@${user.username || 'без username'})
+🧾 Состав заказа:
+${orderItems}
+
+💰 Общая сумма: ${total.toLocaleString('ru-RU')} сум
+    `;
+
+    // Отправка на сервер
+    const res = await fetch('/order', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            message
+        })
+    });
+
+    if (res.ok) {
+        alert('✅ Заказ оформлен! Мы свяжемся с вами в ближайшее время.');
+        cart.clear();
+        closeCheckoutModal();
+    } else {
+        alert('❌ Ошибка при оформлении заказа.');
+    }
 }
+
 
 function clearCart() {
     if (confirm('Вы уверены, что хотите очистить корзину?')) {
