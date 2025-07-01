@@ -185,6 +185,29 @@ def product_detail(product_id):
     product = Product.query.get_or_404(product_id)
     return render_template('product.html', product=product)
 
+import requests
+from flask import request, jsonify
+
+BOT_TOKEN = "7751530491:AAGmzfztRlNOUJ5CPMvkDMSmBSj6a3Xph_U"
+ADMIN_CHAT_ID = 5644397480  # твой Telegram ID
+
+@app.route('/order', methods=['POST'])
+def receive_order():
+    data = request.get_json()
+    message = data.get("message")
+
+    if not message:
+        return jsonify({"success": False}), 400
+
+    url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
+    r = requests.post(url, json={
+        "chat_id": ADMIN_CHAT_ID,
+        "text": message
+    })
+
+    if r.ok:
+        return jsonify({"success": True})
+    return jsonify({"success": False}), 500
 
 
 @app.route('/cart')
