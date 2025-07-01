@@ -143,11 +143,8 @@ def index():
             'orange': ['оранж', 'orange', 'апельсин'],
             'purple': ['фиолет', 'purple', 'сиренев', 'лилов'],
             'pink': ['розов', 'pink', 'пудров'],
-            'navy': ['темно-син', 'navy', 'индиго'],
-            'turquoise': ['бирюз', 'turquoise'],
             'gold': ['золот', 'gold'],
             'silver': ['серебр', 'silver'],
-            'multicolor': ['разноцвет', 'multicolor', 'цветн']
         }
         if color in color_terms:
             color_filter = db.or_(*[
