@@ -118,7 +118,10 @@ body {
     text-align: center;
     display: none;
 }
-
+.cart-item-info {
+position:relative;
+left: 8vw;
+}
 .cart-icon,
 .heart-icon {
     font-size: 16px;
